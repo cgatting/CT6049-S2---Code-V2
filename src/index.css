@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Aptos", "Segoe UI", sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+}
+
+:root {
+  --app-wash: #f5f1e8;
+  --app-paper: rgba(255, 252, 246, 0.78);
+  --app-paper-strong: rgba(255, 255, 255, 0.9);
+  --app-ink: #112031;
+  --accent-copper: #d1734c;
+  --accent-teal: #0f766e;
+  --accent-storm: #2f5f84;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased text-slate-700;
+    background-color: var(--app-wash);
+    background-image:
+      radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 30%),
+      radial-gradient(circle at bottom right, rgba(209, 115, 76, 0.1), transparent 30%);
+    min-height: 100vh;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .surface {
+    @apply border border-white/70 rounded-[28px] shadow-[0_20px_60px_rgba(17,32,49,0.08)] backdrop-blur-xl;
+    background: linear-gradient(180deg, rgba(255, 252, 246, 0.86) 0%, rgba(255, 255, 255, 0.7) 100%);
+  }
+
+  .surface-strong {
+    @apply border border-white/80 rounded-[28px] shadow-[0_24px_70px_rgba(17,32,49,0.1)] backdrop-blur-xl;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 250, 244, 0.88) 100%);
+  }
+
+  .surface-dark {
+    @apply border border-white/10 rounded-[28px] shadow-[0_28px_80px_rgba(2,8,23,0.32)] backdrop-blur-xl text-white;
+    background: linear-gradient(180deg, rgba(8, 16, 28, 0.92) 0%, rgba(15, 23, 42, 0.9) 100%);
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/85 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-600;
+  }
+
+  .chip-dark {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/72;
+  }
+
+  .chip-teal {
+    @apply border-transparent text-white;
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.92), rgba(47, 95, 132, 0.92));
+  }
+
+  .eyebrow {
+    @apply text-[11px] uppercase tracking-[0.28em] font-semibold text-slate-400;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-[18px] px-4 py-3 text-sm font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5;
+    background: linear-gradient(135deg, var(--accent-copper), #c5633e);
+    box-shadow: 0 14px 36px rgba(209, 115, 76, 0.22);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 18px 42px rgba(209, 115, 76, 0.28);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-[18px] border border-slate-200 bg-white/88 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-white;
+  }
+
+  .btn-ghost-dark {
+    @apply inline-flex items-center gap-2 rounded-[18px] border border-white/12 bg-white/8 px-4 py-3 text-sm font-semibold text-white/80 transition-colors hover:bg-white/14 hover:text-white;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.6);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
+
+@media print {
+  aside,
+  header,
+  button,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white;
+    color: black;
+  }
+}
