@@ -1,19 +1,6 @@
-import React, { ReactNode, useEffect, useState } from 'react';
-import {
-  Bell,
-  Database,
-  LayoutDashboard,
-  Library,
-  LogOut,
-  Menu,
-  PieChart,
-  Settings,
-  ShieldCheck,
-  Sparkles,
-  User as UserIcon,
-  X,
-} from 'lucide-react';
-import { Notification, User } from '../types';
+import React, { ReactNode, useState, useEffect } from 'react';
+import { User, Notification } from '../types';
+import { LayoutDashboard, PieChart, LogOut, Library, Menu, X, Bell, Database, ShieldCheck, Search, User as UserIcon, Settings } from 'lucide-react';
 import SettingsModal from './SettingsModal';
 
 interface LayoutProps {
@@ -26,7 +13,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onChangeView, onLogout, notifications }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -37,327 +24,244 @@ const Layout: React.FC<LayoutProps> = ({ children, user, currentView, onChangeVi
   }, []);
 
   const navItems = [
-    { id: 'dashboard', label: 'Command Center', icon: LayoutDashboard },
-    { id: 'reports', label: 'Decision Studio', icon: PieChart },
-    { id: 'data-explorer', label: 'Warehouse Explorer', icon: Database },
-    { id: 'admin', label: 'Control Room', icon: ShieldCheck },
-  ] as const;
+    { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
+    { id: 'reports', label: 'Analytics', icon: PieChart },
+    { id: 'data-explorer', label: 'Explorer', icon: Database },
+    { id: 'admin', label: 'System', icon: ShieldCheck },
+  ];
 
   const filteredNavItems = navItems.filter(item => {
     if (item.id === 'admin' || item.id === 'data-explorer') {
-      return ['Vice-chancellor', 'Chief Librarian'].includes(user.role);
+       return ['Vice-chancellor', 'Chief Librarian'].includes(user.role);
     }
     return true;
   });
-
-  const viewMeta: Record<LayoutProps['currentView'], { title: string; description: string }> = {
-    dashboard: {
-      title: 'Command Center',
-      description: 'Assignment-aligned overview of the operational source, warehouse, and role intelligence.',
-    },
-    reports: {
-      title: 'Decision Studio',
-      description: 'Interactive analysis mapped directly to the decision-maker questions in the brief.',
-    },
-    'data-explorer': {
-      title: 'Warehouse Explorer',
-      description: 'Operational and dimensional table evidence for the assessment implementation.',
-    },
-    admin: {
-      title: 'Control Room',
-      description: 'ETL execution history, audit evidence, and governance controls.',
-    },
+  
+  const viewMeta: Record<string, { title: string; description: string }> = {
+    dashboard: { title: 'Overview', description: 'Role-based insights and KPIs' },
+    reports: { title: 'Analytics Studio', description: 'Trends, filters, and performance' },
+    'data-explorer': { title: 'Data Explorer', description: 'Browse warehouse tables' },
+    admin: { title: 'System Admin', description: 'Audit logs and configuration' }
   };
 
-  const unreadCount = notifications.filter(note => !note.read).length;
-
   return (
-    <div className="min-h-screen bg-[var(--app-wash)] text-slate-900">
-      <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+    <div className={`flex h-screen bg-slate-50 font-sans overflow-hidden text-slate-900 transition-colors duration-300`}>
+      <SettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
 
-      <div className="flex min-h-screen">
-        <aside className="hidden xl:flex w-80 shrink-0 flex-col border-r border-white/50 bg-slate-950 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(48,103,140,0.35),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(209,115,76,0.25),transparent_30%)]" />
-
-          <div className="relative z-10 px-7 pt-7 pb-5 border-b border-white/10">
-            <div className="flex items-center gap-3">
-              <div className="h-12 w-12 rounded-2xl bg-[var(--accent-copper)]/90 text-white flex items-center justify-center shadow-[0_16px_40px_rgba(209,115,76,0.25)]">
-                <Library className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-[11px] uppercase tracking-[0.28em] text-white/55">CT6049 Assignment 2</p>
-                <h1 className="text-2xl font-serif leading-none">LibWare Decision Studio</h1>
-              </div>
-            </div>
-
-            <div className="mt-6 surface-dark rounded-[28px] p-5">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="eyebrow text-white/60">Assessment Focus</p>
-                  <p className="mt-2 text-sm text-white/80 leading-6">
-                    Operational database, dimensional warehouse, ETL, secure access, and role-led analytics.
-                  </p>
-                </div>
-                <Sparkles className="h-5 w-5 text-[var(--accent-copper)] shrink-0" />
-              </div>
-
-              <div className="mt-5 grid grid-cols-3 gap-3 text-center">
-                <div className="rounded-2xl bg-white/5 p-3 border border-white/10">
-                  <div className="text-xl font-semibold">10</div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/50 mt-1">Questions</div>
-                </div>
-                <div className="rounded-2xl bg-white/5 p-3 border border-white/10">
-                  <div className="text-xl font-semibold">12</div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/50 mt-1">Reports</div>
-                </div>
-                <div className="rounded-2xl bg-white/5 p-3 border border-white/10">
-                  <div className="text-xl font-semibold">RBAC</div>
-                  <div className="text-[10px] uppercase tracking-[0.22em] text-white/50 mt-1">Protected</div>
-                </div>
-              </div>
-            </div>
+      {/* Sidebar: Dark Slate with Soft Indigo Accents */}
+      <aside className="hidden lg:flex flex-col w-64 bg-slate-900 border-r border-slate-800 z-30 transition-colors duration-300">
+        <div className="p-6 flex items-center space-x-3 border-b border-slate-800">
+          <div className="bg-indigo-600 p-1.5 rounded-lg">
+            <Library className="h-5 w-5 text-white" />
           </div>
+          <span className="font-bold text-lg text-white tracking-tight">LibWare</span>
+        </div>
 
-          <nav className="relative z-10 flex-1 px-5 py-6 space-y-2">
-            {filteredNavItems.map(item => {
-              const isActive = currentView === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => onChangeView(item.id)}
-                  className={`w-full text-left rounded-[24px] px-4 py-4 transition-all border ${
-                    isActive
-                      ? 'bg-white text-slate-950 border-white shadow-[0_18px_40px_rgba(255,255,255,0.12)]'
-                      : 'bg-white/0 text-white/72 border-white/8 hover:bg-white/6 hover:border-white/15'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <item.icon className={`h-5 w-5 ${isActive ? 'text-[var(--accent-copper)]' : 'text-white/60'}`} />
-                      <div>
-                        <p className="font-semibold">{item.label}</p>
-                        <p className={`text-xs mt-1 ${isActive ? 'text-slate-500' : 'text-white/45'}`}>
-                          {viewMeta[item.id].description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
-          </nav>
+        <nav className="flex-1 px-3 py-6 space-y-1">
+          {filteredNavItems.map((item) => {
+            const isActive = currentView === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => onChangeView(item.id as any)}
+                className={`w-full flex items-center px-3 py-2.5 rounded-lg transition-all text-sm font-medium ${
+                  isActive 
+                    ? 'bg-indigo-600 text-white shadow-sm' 
+                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                }`}
+              >
+                <item.icon className={`h-4 w-4 mr-3 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
 
-          <div className="relative z-10 px-5 pb-6 space-y-4">
-            <div className="surface-dark rounded-[28px] p-4">
-              <div className="flex items-center gap-3">
-                <img src={user.avatar} alt={user.name} className="h-11 w-11 rounded-2xl border border-white/15 object-cover" />
-                <div className="min-w-0">
-                  <p className="font-semibold truncate">{user.name}</p>
-                  <p className="text-xs text-white/55 uppercase tracking-[0.22em] mt-1 truncate">{user.role}</p>
-                </div>
-              </div>
-            </div>
-
-            <button
+        <div className="p-4 border-t border-slate-800">
+            <button 
               onClick={onLogout}
-              className="w-full rounded-[20px] border border-white/12 px-4 py-3 text-white/75 hover:text-white hover:bg-white/6 transition-colors flex items-center justify-center gap-2"
+              className="w-full flex items-center px-3 py-2.5 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-all text-sm font-medium"
             >
-              <LogOut className="h-4 w-4" />
-              Sign out
+              <LogOut className="h-4 w-4 mr-3" />
+              Logout
             </button>
-          </div>
-        </aside>
+        </div>
+      </aside>
 
-        <div className="flex-1 min-w-0 flex flex-col">
-          <header className="sticky top-0 z-20 border-b border-white/50 bg-[rgba(245,241,232,0.82)] backdrop-blur-xl">
-            <div className="px-5 lg:px-8 py-4 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-4 min-w-0">
+      {/* Main Container */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+        {/* Header: Clean White */}
+        <header className="h-16 flex items-center justify-between px-6 bg-white border-b border-slate-200 z-20 transition-colors duration-300">
+            <div className="flex items-center gap-4">
                 <button
                   onClick={() => setIsMobileMenuOpen(true)}
-                  className="xl:hidden h-11 w-11 rounded-2xl border border-slate-200 bg-white/80 flex items-center justify-center text-slate-700"
-                  title="Open navigation"
+                  className="lg:hidden p-2 text-slate-500 hover:bg-slate-100 rounded-lg"
+                  title="Menu"
                 >
                   <Menu className="h-5 w-5" />
                 </button>
-
-                <div className="min-w-0">
-                  <p className="eyebrow">Assessment Brief Alignment</p>
-                  <h2 className="text-2xl font-serif text-slate-950 leading-tight">{viewMeta[currentView].title}</h2>
-                  <p className="text-sm text-slate-600 mt-1 max-w-3xl">{viewMeta[currentView].description}</p>
+                <div className="hidden md:flex flex-col">
+                  <div className="flex items-center text-sm">
+                    <span className="font-semibold text-slate-700">LibWare</span>
+                    <span className="mx-2 text-slate-300">/</span>
+                    <span className="font-semibold text-slate-900">{viewMeta[currentView].title}</span>
+                  </div>
                 </div>
-              </div>
-
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="hidden md:flex items-center gap-2 chip">
-                  <ShieldCheck className="h-4 w-4 text-[var(--accent-teal)]" />
-                  <span>JWT + RBAC</span>
+                <div className="hidden lg:flex items-center bg-slate-100 rounded-lg px-3 py-1.5 w-80 transition-colors duration-300 ml-8 focus-within:ring-2 focus-within:ring-indigo-500/20">
+                  <Search className="h-4 w-4 text-slate-400 mr-2" />
+                  <input 
+                    type="text" 
+                    placeholder="Search database..." 
+                    className="bg-transparent border-none outline-none text-sm text-slate-900 w-full placeholder:text-slate-400"
+                  />
                 </div>
-                <div className="hidden md:flex items-center gap-2 chip">
-                  <Database className="h-4 w-4 text-[var(--accent-copper)]" />
-                  <span>Warehouse Synced</span>
-                </div>
+            </div>
 
-                <button
+            <div className="flex items-center space-x-4">
+
+                <button 
                   onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                  className="relative h-11 w-11 rounded-2xl border border-slate-200 bg-white/80 flex items-center justify-center text-slate-700 hover:bg-white"
+                  className="relative p-2 text-slate-500 hover:bg-slate-100 rounded-full transition-all"
                 >
-                  <Bell className="h-5 w-5" />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-[var(--accent-copper)] text-white text-[10px] font-bold flex items-center justify-center">
-                      {unreadCount}
-                    </span>
-                  )}
+                    <Bell className="h-5 w-5" />
+                    {notifications.filter(n => !n.read).length > 0 && (
+                      <span className="absolute top-1.5 right-1.5 bg-red-500 text-white text-[10px] font-bold px-1 py-0.5 rounded-full min-w-[16px] flex items-center justify-center">
+                        {notifications.filter(n => !n.read).length}
+                      </span>
+                    )}
                 </button>
-
+                
                 <div className="relative">
-                  <button
+                  <button 
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center gap-3 rounded-[22px] border border-slate-200 bg-white/90 px-2 py-2 hover:bg-white transition-colors"
+                    className="flex items-center space-x-3 focus:outline-none hover:bg-slate-50 rounded-lg p-1.5 transition-colors"
                   >
-                    <img src={user.avatar} alt={user.name} className="h-9 w-9 rounded-2xl object-cover border border-slate-200" />
-                    <div className="hidden lg:block text-left pr-2">
-                      <p className="text-sm font-semibold text-slate-900">{user.name}</p>
-                      <p className="text-[11px] uppercase tracking-[0.2em] text-slate-500 mt-1">{user.role}</p>
-                    </div>
+                      <img 
+                        src={user.avatar} 
+                        alt={user.name} 
+                        className="h-8 w-8 rounded-full object-cover border border-slate-200"
+                      />
+                      <div className="text-left hidden sm:block">
+                          <p className="text-xs font-semibold text-slate-900">{user.name}</p>
+                          <p className="text-[10px] text-slate-500 capitalize">{user.role}</p>
+                      </div>
                   </button>
 
                   {isUserMenuOpen && (
                     <>
-                      <div className="fixed inset-0 z-30" onClick={() => setIsUserMenuOpen(false)} />
-                      <div className="absolute right-0 top-14 z-40 w-56 rounded-[24px] border border-slate-200 bg-white shadow-[0_25px_60px_rgba(15,23,42,0.16)] p-2">
-                        <button className="w-full rounded-2xl px-4 py-3 text-left text-sm font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-3">
-                          <UserIcon className="h-4 w-4 text-slate-400" />
-                          Profile
+                      <div className="fixed inset-0 z-30" onClick={() => setIsUserMenuOpen(false)}></div>
+                      <div className="absolute right-0 top-12 w-48 bg-white border border-slate-200 shadow-lg rounded-xl z-40 py-1 animate-fade-in overflow-hidden">
+                        <button className="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 flex items-center">
+                          <UserIcon className="h-4 w-4 mr-2.5 text-slate-400" /> Profile
                         </button>
-                        <button
-                          onClick={() => {
-                            setIsSettingsOpen(true);
-                            setIsUserMenuOpen(false);
-                          }}
-                          className="w-full rounded-2xl px-4 py-3 text-left text-sm font-medium text-slate-700 hover:bg-slate-50 flex items-center gap-3"
+                        <button 
+                          onClick={() => { setIsSettingsOpen(true); setIsUserMenuOpen(false); }}
+                          className="w-full text-left px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 flex items-center"
                         >
-                          <Settings className="h-4 w-4 text-slate-400" />
-                          Settings
+                          <Settings className="h-4 w-4 mr-2.5 text-slate-400" /> Settings
                         </button>
-                        <div className="my-2 border-t border-slate-100" />
-                        <button
-                          onClick={onLogout}
-                          className="w-full rounded-2xl px-4 py-3 text-left text-sm font-medium text-rose-600 hover:bg-rose-50 flex items-center gap-3"
-                        >
-                          <LogOut className="h-4 w-4" />
-                          Sign out
+                        <div className="border-t border-slate-100 my-1"></div>
+                        <button onClick={onLogout} className="w-full text-left px-4 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50 flex items-center">
+                          <LogOut className="h-4 w-4 mr-2.5" /> Logout
                         </button>
                       </div>
                     </>
                   )}
                 </div>
-              </div>
             </div>
-          </header>
-
-          <main className="flex-1 overflow-y-auto px-5 lg:px-8 py-6 lg:py-8">
-            <div className="max-w-[1500px] mx-auto">{children}</div>
-          </main>
-
-          {isMobileMenuOpen && (
-            <>
-              <div className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
-              <div className="fixed left-0 top-0 bottom-0 z-50 w-[86vw] max-w-sm bg-slate-950 text-white px-5 py-6 overflow-y-auto">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className="h-11 w-11 rounded-2xl bg-[var(--accent-copper)] flex items-center justify-center">
-                      <Library className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase tracking-[0.24em] text-white/55">CT6049</p>
-                      <h3 className="font-serif text-xl">LibWare</h3>
-                    </div>
-                  </div>
-                  <button onClick={() => setIsMobileMenuOpen(false)} className="h-10 w-10 rounded-2xl bg-white/8 flex items-center justify-center">
-                    <X className="h-5 w-5" />
-                  </button>
+        </header>
+        
+        {isMobileMenuOpen && (
+          <>
+            <div className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)}></div>
+            <div className="fixed left-0 top-0 h-full w-72 bg-slate-900 z-50 p-6 shadow-xl">
+              <div className="flex items-center space-x-3 mb-8">
+                <div className="bg-indigo-600 p-1.5 rounded-lg">
+                  <Library className="h-6 w-6 text-white" />
                 </div>
-
-                <div className="space-y-2">
-                  {filteredNavItems.map(item => {
-                    const isActive = currentView === item.id;
-                    return (
-                      <button
-                        key={item.id}
-                        onClick={() => {
-                          onChangeView(item.id);
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className={`w-full rounded-[22px] px-4 py-4 text-left border ${
-                          isActive ? 'bg-white text-slate-950 border-white' : 'bg-white/0 text-white/75 border-white/10'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <item.icon className={`h-5 w-5 ${isActive ? 'text-[var(--accent-copper)]' : 'text-white/55'}`} />
-                          <div>
-                            <p className="font-semibold">{item.label}</p>
-                            <p className={`text-xs mt-1 ${isActive ? 'text-slate-500' : 'text-white/45'}`}>
-                              {viewMeta[item.id].description}
-                            </p>
-                          </div>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => {
-                    onLogout();
-                    setIsMobileMenuOpen(false);
-                  }}
-                  className="mt-8 w-full rounded-[20px] border border-white/12 px-4 py-3 text-white/80 flex items-center justify-center gap-2"
+                <span className="font-bold text-xl text-white tracking-tight">LibWare</span>
+              </div>
+              <nav className="space-y-2">
+                {filteredNavItems.map((item) => {
+                  const isActive = currentView === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => { onChangeView(item.id as any); setIsMobileMenuOpen(false); }}
+                      className={`w-full flex items-center px-4 py-3 rounded-lg transition-all text-sm font-medium ${
+                        isActive 
+                          ? 'bg-indigo-600 text-white' 
+                          : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                      }`}
+                    >
+                      <item.icon className={`h-5 w-5 mr-3 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </nav>
+              <div className="mt-8 border-t border-slate-800 pt-6">
+                <button 
+                  onClick={() => { onLogout(); setIsMobileMenuOpen(false); }}
+                  className="w-full flex items-center px-4 py-3 text-slate-400 hover:bg-slate-800 hover:text-white rounded-lg transition-all text-sm font-medium"
                 >
-                  <LogOut className="h-4 w-4" />
-                  Sign out
+                  <LogOut className="h-5 w-5 mr-3" />
+                  Logout
                 </button>
               </div>
-            </>
-          )}
+            </div>
+          </>
+        )}
 
-          {isNotificationsOpen && (
+        {/* Content Area */}
+        <main className="flex-1 overflow-y-auto bg-slate-50 p-6 lg:p-8">
+           <div className="max-w-7xl mx-auto space-y-6">
+             {children}
+           </div>
+        </main>
+
+        {/* Notifications Slide-Over (Modern) */}
+        {isNotificationsOpen && (
             <>
-              <div className="fixed inset-0 z-30" onClick={() => setIsNotificationsOpen(false)} />
-              <div className="absolute right-5 top-24 lg:right-8 z-40 w-[22rem] rounded-[28px] border border-slate-200 bg-white shadow-[0_35px_80px_rgba(15,23,42,0.18)] overflow-hidden">
-                <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
-                  <div>
-                    <p className="eyebrow">Activity Feed</p>
-                    <h3 className="text-lg font-serif text-slate-950">Notifications</h3>
-                  </div>
-                  <button onClick={() => setIsNotificationsOpen(false)} className="text-slate-400 hover:text-slate-700">
-                    <X className="h-4 w-4" />
-                  </button>
-                </div>
-
-                <div className="max-h-[24rem] overflow-y-auto">
-                  {notifications.length > 0 ? (
-                    notifications.slice(0, 6).map(note => (
-                      <div key={note.id} className="px-5 py-4 border-b border-slate-100 last:border-b-0">
-                        <div className="flex items-start gap-3">
-                          <div className="h-2.5 w-2.5 rounded-full bg-[var(--accent-copper)] mt-1.5 shrink-0" />
-                          <div>
-                            <p className="text-sm font-medium text-slate-900">{note.title}</p>
-                            <p className="text-xs text-slate-500 mt-1">{note.time}</p>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  ) : (
-                    <div className="px-6 py-12 text-center text-slate-500">
-                      <Bell className="h-8 w-8 mx-auto text-slate-300 mb-3" />
-                      No new notifications
+                <div className="fixed inset-0 z-40 bg-slate-900/20 backdrop-blur-[1px]" onClick={() => setIsNotificationsOpen(false)}></div>
+                <div className="absolute right-4 top-20 w-80 bg-white border border-slate-200 shadow-xl rounded-2xl z-50 p-0 animate-fade-in overflow-hidden">
+                    <div className="p-4 border-b border-slate-100 flex justify-between items-center">
+                        <h3 className="font-semibold text-sm text-slate-900">Notifications</h3>
+                        <button onClick={() => setIsNotificationsOpen(false)} className="text-slate-400 hover:text-slate-600">
+                            <X className="h-4 w-4" />
+                        </button>
                     </div>
-                  )}
+                    <div className="max-h-96 overflow-y-auto">
+                        {notifications.length > 0 ? notifications.slice(0, 5).map(note => (
+                            <div key={note.id} className="p-4 border-b border-slate-50 hover:bg-slate-50 transition-colors">
+                                <div className="flex items-start gap-3">
+                                    <div className="h-2 w-2 mt-1.5 rounded-full bg-indigo-500 shrink-0"></div>
+                                    <div>
+                                        <p className="text-sm font-medium text-slate-800">{note.title}</p>
+                                        <p className="text-xs text-slate-500 mt-1">{note.time}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )) : (
+                          <div className="flex flex-col items-center justify-center py-8 text-center">
+                              <Bell className="h-8 w-8 text-slate-200 mb-2" />
+                              <p className="text-sm text-slate-500">No new notifications</p>
+                          </div>
+                        )}
+                    </div>
+                    {notifications.length > 0 && (
+                      <div className="p-3 bg-slate-50 border-t border-slate-100">
+                          <button className="w-full py-2 text-xs font-medium text-indigo-600 hover:text-indigo-700">
+                              View All Activity
+                          </button>
+                      </div>
+                    )}
                 </div>
-              </div>
             </>
-          )}
-        </div>
+        )}
       </div>
     </div>
   );

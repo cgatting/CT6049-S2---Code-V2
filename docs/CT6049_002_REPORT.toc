@@ -1,0 +1,19 @@
+\contentsline {section}{Abstract}{i}{Doc-Start}%
+\contentsline {section}{\numberline {1}Introduction and Decision-Maker Questions}{1}{section.1}%
+\contentsline {section}{\numberline {2}Critical Evaluation of the Dimensional Model}{2}{section.2}%
+\contentsline {section}{\numberline {3}Explanation of the ETL Process}{3}{section.3}%
+\contentsline {section}{\numberline {4}Critical Analysis of Security, User Accounts, Indexes, Partitioning, and Prepared Statements}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Authentication, Authorization, and User Accounts}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Indexes}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Partitioning}{7}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Prepared Statements}{7}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Backup, Restore, and Recovery}{8}{section.5}%
+\contentsline {section}{\numberline {6}Load Testing Plan}{8}{section.6}%
+\contentsline {section}{\numberline {7}Conclusion}{9}{section.7}%
+\contentsline {section}{Reference List}{10}{section.7}%
+\contentsline {section}{\numberline {A}Application Source Artefacts}{10}{appendix.A}%
+\contentsline {section}{\numberline {B}Database Build Scripts}{11}{appendix.B}%
+\contentsline {section}{\numberline {C}Sample Data Scripts}{11}{appendix.C}%
+\contentsline {section}{\numberline {D}ETL Scripts}{11}{appendix.D}%
+\contentsline {section}{\numberline {E}Deployment Instructions}{11}{appendix.E}%
+\contentsline {section}{\numberline {F}Assessment Login Details}{12}{appendix.F}%
